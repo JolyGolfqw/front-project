@@ -6,33 +6,44 @@ const initialState: State = {
   error: null,
   signingUp: false,
   signingIn: false,
+  id: localStorage.getItem("id"),
+  login:localStorage.getItem("login"),
   token: localStorage.getItem("token"),
 };
 
 export const authSignUp = createAsyncThunk<
   ReturnType<typeof String>,
-  { name: string; login: string; password: string },
+  {
+    name: string;
+    subName: string;
+    login: string;
+    password: string;
+    phone: string;
+  },
   { state: RootState }
->("auth/signup", async ({ name, login, password }, thunkAPI) => {
-  try {
-    const res = await fetch("http://localhost:4000/registration", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        name,
-        login,
-        password,
-      }),
-    });
-    const json = await res.json();
-    if (json.error) {
-      return thunkAPI.rejectWithValue(json.error);
+>(
+  "auth/signup",
+  async ({ name, subName, login, password, phone }, thunkAPI) => {
+    try {
+      const res = await fetch("http://localhost:4000/registration", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name,
+          login,
+          password,
+        }),
+      });
+      const json = await res.json();
+      if (json.error) {
+        return thunkAPI.rejectWithValue(json.error);
+      }
+      return json;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
     }
-    return json;
-  } catch (error) {
-    return thunkAPI.rejectWithValue(error);
   }
-});
+);
 
 export const authSignIn = createAsyncThunk<
   ReturnType<typeof String>,
@@ -48,12 +59,14 @@ export const authSignIn = createAsyncThunk<
         password,
       }),
     });
-    const token = await res.json();
-    if (token.error) {
-      return thunkAPI.rejectWithValue(token.error);
+    const user = await res.json();
+    if (user.error) {
+      return thunkAPI.rejectWithValue(user.error);
     }
-    localStorage.setItem("token", token);
-    return token;
+    localStorage.setItem("id", user.id);
+    localStorage.setItem("login", user.login);
+    localStorage.setItem("token", user.token);
+    return user;
   } catch (error) {
     return thunkAPI.rejectWithValue(error);
   }
@@ -63,7 +76,7 @@ export const authSignOut = createAsyncThunk(
   "auth/signout",
   async (_, thunkAPI) => {
     try {
-      localStorage.removeItem("token");
+      localStorage.removeItem("user");
       window.location.reload();
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
@@ -98,7 +111,7 @@ export const applicationSlice = createSlice({
       .addCase(authSignIn.fulfilled, (state, action) => {
         state.signingUp = false;
         state.error = null;
-        state.token = action.payload;
+        state.user = action.payload;
       });
   },
 });
