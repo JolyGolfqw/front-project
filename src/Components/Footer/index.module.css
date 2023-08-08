@@ -1,0 +1,63 @@
+.rod1 {
+   
+    display: flex;
+    justify-content: space-around;
+   
+}
+.rod {
+    background-color: #59443F;
+    height: 469px;
+}
+.logo {
+    display: flex;
+    width: 324px;
+    justify-content: space-between;
+    margin-top: 80px;
+}
+.img {
+    margin-top: 80px;
+}
+.text {
+    color: white;
+}
+.text h2 {
+    font-size: 50px;
+}
+.text p {
+    font-size: 20px;
+}
+.content {
+    display: flex;
+    justify-content: space-evenly;
+    margin-top: 30px;
+}
+.discription p {
+    width: 192px;
+    display: flex;
+    flex-direction: column;
+    color: white;
+  
+}
+.discription {
+    display: flex;
+    width: 690px;
+    justify-content: space-between;
+}
+.discription p a {
+    text-decoration: none;
+    color: white;
+}
+.text2 {
+    color: white;
+    
+}
+.discription p a:hover {
+    color: red;
+    text-decoration: underline;
+}
+.text2 p:nth-child(1) {
+    width: 166px;
+}
+.text2 p:nth-child(2) {
+    margin-top: 70px;
+}
