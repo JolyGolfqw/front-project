@@ -1,19 +1,10 @@
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../../app/store";
-import { getUser } from "../../features/userSlice";
+import React from "react";
 import { Stack } from "react-bootstrap";
 import "../../index.css";
+import { useFetchRecipientUser } from "../../hooks/useFetchRecipient";
+
 const UserChat = ({ chat, user }) => {
-  const dispatch = useDispatch<AppDispatch>();
-  const recipient = useSelector((state: RootState) => state.user.recipient);
-  const recipientId = chat.members.find((item) => item !== user.id);
-
-  useEffect(() => {
-    dispatch(getUser(recipientId));
-  }, []);
-
-  console.log(recipient);
+  const recipient = useFetchRecipientUser(chat, user);
 
   return (
     <Stack

@@ -7,7 +7,7 @@ const initialState: State = {
   signingUp: false,
   signingIn: false,
   id: localStorage.getItem("id"),
-  login:localStorage.getItem("login"),
+  login: localStorage.getItem("login"),
   token: localStorage.getItem("token"),
 };
 
@@ -76,7 +76,9 @@ export const authSignOut = createAsyncThunk(
   "auth/signout",
   async (_, thunkAPI) => {
     try {
-      localStorage.removeItem("user");
+      localStorage.removeItem("id");
+      localStorage.removeItem("login");
+      localStorage.removeItem("token");
       window.location.reload();
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
