@@ -1,35 +1,11 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  recipient: null,
   users: [],
+  onlineUsers: null,
 };
 
-export const getUser = createAsyncThunk(
-  "user/getUser",
-  async (recipientId, thunkAPI) => {
-    try {
-      console.log(recipientId);
-
-      const res = await fetch(
-        `http://localhost:4000/find-user/${recipientId}`,
-        {
-          method: "GET",
-          headers: { "Content-Type": "application/json" },
-        }
-      );
-      const json = await res.json();
-      if (json.error) {
-        return thunkAPI.rejectWithValue(json.error);
-      }
-      return json;
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error);
-    }
-  }
-);
-
-export const getusers = createAsyncThunk(
+export const getUsers = createAsyncThunk(
   "users/getUsers",
   async (_, thunkAPI) => {
     try {
@@ -51,14 +27,18 @@ export const getusers = createAsyncThunk(
 export const userSlice = createSlice({
   name: "user",
   initialState,
-  reducers: {},
+  reducers: {
+    setUsersOnline(state, action) {
+      state.onlineUsers = action.payload;
+    },
+  },
   extraReducers(builder) {
-    builder.addCase(getUser.fulfilled, (state, action) => {
-      state.recipient = action.payload;
+    builder.addCase(getUsers.fulfilled, (state, action) => {
+      state.users = action.payload;
     });
   },
 });
 
-// export const { a } = userSlice.actions;
+export const { setUsersOnline } = userSlice.actions;
 
 export default userSlice.reducer;
