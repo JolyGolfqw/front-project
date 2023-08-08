@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import Header from "./Components/Header";
 import SignUp from "./pages/SignUp";
@@ -8,12 +8,35 @@ import Home from "./pages/Home";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Container } from "react-bootstrap";
-import { useSelector } from "react-redux";
-import { RootState } from "./app/store";
-
-
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "./app/store";
+import { io } from "socket.io-client";
+import { setUsersOnline } from "./features/userSlice";
 function App() {
   const token = useSelector((state: RootState) => state.application.token);
+  const dispatch = useDispatch<AppDispatch>();
+  const id = useSelector((state: RootState) => state.application.id);
+  const [socket, setSocket] = useState(null);
+  const online = useSelector((state: RootState) => state.user.onlineUsers);
+  console.log(online);
+
+  useEffect(() => {
+    const newSocket = io("http://localhost:3000");
+    setSocket(newSocket);
+    return () => {
+      newSocket.disconnect();
+    };
+  }, [id]);
+
+  useEffect(() => {
+    if (socket === null) return;
+    if (id === null) return;
+    socket.emit("addNewUser", id);
+    socket.on("getOnlineUsers", (res) => {
+      dispatch(setUsersOnline(res));
+    });
+  }, [socket]);
+
   return (
     <>
       <Header />
