@@ -8,12 +8,11 @@ const SignUp = () => {
 
   const [name, setName] = useState("");
   const [subName, setSubName] = useState("");
-  const [login, setLogin] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [phone, setPhone] = useState("");
 
   const handleSignUp = () => {
-    dispatch(authSignUp({ name, subName, login, password, phone }));
+    dispatch(authSignUp({ name, subName, email, password }));
   };
 
   return (
@@ -28,11 +27,11 @@ const SignUp = () => {
         onChange={(e) => setSubName(e.target.value)}
       />
 
-      <label htmlFor="login">Логин:</label>
+      <label htmlFor="email">Почта:</label>
       <input
-        id="login"
-        value={login}
-        onChange={(e) => setLogin(e.target.value)}
+        id="email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
       />
 
       <label htmlFor="password">Пароль:</label>
@@ -40,13 +39,6 @@ const SignUp = () => {
         id="password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
-      />
-
-      <label htmlFor="phone">Номер:</label>
-      <input
-        id="phone"
-        value={phone}
-        onChange={(e) => setPhone(e.target.value)}
       />
 
       <button onClick={handleSignUp}>Зарегистрироваться</button>

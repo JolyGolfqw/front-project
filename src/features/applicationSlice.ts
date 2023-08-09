@@ -16,34 +16,31 @@ export const authSignUp = createAsyncThunk<
   {
     name: string;
     subName: string;
-    login: string;
+    email: string;
     password: string;
-    phone: string;
   },
   { state: RootState }
->(
-  "auth/signup",
-  async ({ name, subName, login, password, phone }, thunkAPI) => {
-    try {
-      const res = await fetch("http://localhost:4000/registration", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name,
-          login,
-          password,
-        }),
-      });
-      const json = await res.json();
-      if (json.error) {
-        return thunkAPI.rejectWithValue(json.error);
-      }
-      return json;
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error);
+>("auth/signup", async ({ name, subName, email, password }, thunkAPI) => {
+  try {
+    const res = await fetch("http://localhost:4000/registration", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name,
+        subName,
+        login: email,
+        password,
+      }),
+    });
+    const json = await res.json();
+    if (json.error) {
+      return thunkAPI.rejectWithValue(json.error);
     }
+    return json;
+  } catch (error) {
+    return thunkAPI.rejectWithValue(error);
   }
-);
+});
 
 export const authSignIn = createAsyncThunk<
   ReturnType<typeof String>,
@@ -104,16 +101,18 @@ export const applicationSlice = createSlice({
         state.error = null;
       })
       .addCase(authSignIn.pending, (state) => {
-        state.signingUp = true;
+        state.signingIn = true;
       })
       .addCase(authSignIn.rejected, (state, action: any) => {
-        state.signingUp = false;
+        state.signingIn = false;
         state.error = action.payload;
       })
-      .addCase(authSignIn.fulfilled, (state, action) => {
-        state.signingUp = false;
+      .addCase(authSignIn.fulfilled, (state) => {
+        state.signingIn = false;
         state.error = null;
-        state.user = action.payload;
+        state.id = localStorage.getItem("id");
+        state.login = localStorage.getItem("login");
+        state.token = localStorage.getItem("token");
       });
   },
 });
