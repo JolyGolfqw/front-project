@@ -1,22 +1,29 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../app/store";
-import { getChat, getMessages, setCurrentChat } from "../../features/chatSlice";
+import {
+  getChat,
+  getMessages,
+  setCurrentChat,
+  setNewMessage,
+} from "../../features/chatSlice";
 
 import { Container, Stack } from "react-bootstrap";
 import UserChat from "../../Components/Chat/UserChat";
-import { getUsers } from "../../features/userSlice";
+import { getUsers, setUsersOnline } from "../../features/userSlice";
 import PotencialUsers from "../../Components/PotencialUsers";
 import ChatBox from "../../Components/Chat/ChatBox";
+import { io } from "socket.io-client";
 
 const Chat = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { userChats, currentChat } = useSelector(
+  const { userChats, currentChat, newMessage } = useSelector(
     (state: RootState) => state.chat
   );
   const { id, login, token } = useSelector(
     (state: RootState) => state.application
   );
+  const [socket, setSocket] = useState(null);
 
   useEffect(() => {
     dispatch(getChat(id));
@@ -26,6 +33,47 @@ const Chat = () => {
   useEffect(() => {
     dispatch(getMessages(currentChat._id));
   }, [currentChat]);
+
+  useEffect(() => {
+    const newSocket = io("http://localhost:4000");
+    setSocket(newSocket);
+    return () => {
+      newSocket.disconnect();
+    };
+  }, [id]);
+
+  useEffect(() => {
+    if (socket === null) return;
+    if (id === null) return;
+
+    socket.emit("authenticate", id);
+    socket.on("privateMessage", ({ message }) => {
+      dispatch(setNewMessage(message));
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, [socket]);
+
+  useEffect(() => {
+    if (socket === null) return;
+    if (id === null) return;
+
+    const recipientId = currentChat.members
+      ? currentChat.members.find((item) => item !== id)
+      : null;
+
+    if (recipientId === null) return;
+
+    if (newMessage) {
+      socket.emit("sendPrivateMessage", {
+        senderId: id,
+        recipientId,
+        message: newMessage,
+      });
+    }
+  }, [newMessage]);
 
   return (
     <Container>

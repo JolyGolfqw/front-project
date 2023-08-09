@@ -26,6 +26,7 @@ const ChatBox = () => {
     dispatch(sendMessage({ chatId, senderId, text }));
     setTextMessage("")
   };
+  
   return (
     <Stack gap={4} className="chat-box">
       <div className="chat-header">
