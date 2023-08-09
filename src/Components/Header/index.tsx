@@ -7,6 +7,8 @@ import { authSignOut } from "../../features/applicationSlice";
 const Header = () => {
   const dispatch = useDispatch<AppDispatch>();
   const token = useSelector((state: RootState) => state.application.token);
+console.log(token);
+
   return (
     <div>
       <Navbar bg="dark">

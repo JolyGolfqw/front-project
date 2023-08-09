@@ -3,8 +3,13 @@ import logo from "../../images/logo.png";
 import location from '../../images/город.png'
 import styles from './header.module.css'
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { RootState } from "../../app/store";
 
 function Headers() {
+  const token = useSelector((state:RootState) => state.application.token)
+  console.log(token);
+  
   return (
     <div className={styles.rod}>
       <div className={styles.img}>
