@@ -4,6 +4,7 @@ const initialState = {
   userChats: null,
   currentChat: {},
   messages: [],
+  newMessage: null,
   loading: false,
   error: null,
 };
@@ -100,6 +101,9 @@ export const chatSlice = createSlice({
     setCurrentChat(state, action) {
       state.currentChat = action.payload;
     },
+    setNewMessage(state, action) {
+      state.messages = [...state.messages, action.payload];
+    },
   },
   extraReducers(builder) {
     builder.addCase(getChat.pending, (state) => {
@@ -135,10 +139,11 @@ export const chatSlice = createSlice({
     }),
       builder.addCase(sendMessage.fulfilled, (state, action) => {
         state.messages = [...state.messages, action.payload];
+        state.newMessage = action.payload;
       });
   },
 });
 
-export const { setCurrentChat } = chatSlice.actions;
+export const { setCurrentChat, setNewMessage } = chatSlice.actions;
 
 export default chatSlice.reducer;
