@@ -1,0 +1,19 @@
+.inputBlock{
+    position: relative;
+}
+.popUp{
+    position: absolute;
+    z-index: 1;
+    background-color: white;
+    height: 300px;
+    border-radius: 10px;
+    overflow: scroll;
+    padding: 15px 15px;
+}
+.user{
+    margin: 10px 0px;
+    display: flex;
+}
+.user div{
+    padding: 0px 10px;
+}

@@ -20,13 +20,18 @@ const ChatBox = () => {
     login,
     token,
   });
-  if (!recipient) return <div>HUOOSHHOOOON</div>;
+  if (!recipient)
+    return (
+      <Stack className="justify-content-center text-center">
+        <span>HUOOSHHOOOON</span> <span>Отправляйте и получайте сообщения</span>
+      </Stack>
+    );
   const handleSendMessage = (chatId, senderId, text) => {
     if (!text) return;
     dispatch(sendMessage({ chatId, senderId, text }));
-    setTextMessage("")
+    setTextMessage("");
   };
-  
+
   return (
     <Stack gap={4} className="chat-box">
       <div className="chat-header">
