@@ -33,6 +33,10 @@ export const authSignUp = createAsyncThunk<
       }),
     });
     const json = await res.json();
+    if (json[0]) {
+      return thunkAPI.rejectWithValue(json);
+    }
+
     if (json.error) {
       return thunkAPI.rejectWithValue(json.error);
     }
@@ -86,18 +90,23 @@ export const authSignOut = createAsyncThunk(
 export const applicationSlice = createSlice({
   name: "application",
   initialState,
-  reducers: {},
+  reducers: {
+    setSignUp(state, action) {
+      console.log(action);
+      state.signingUp = action.payload;
+    },
+  },
   extraReducers(builder) {
     builder
       .addCase(authSignUp.pending, (state) => {
-        state.signingUp = true;
+        state.signingUp = false;
       })
       .addCase(authSignUp.rejected, (state, action: any) => {
         state.signingUp = false;
         state.error = action.payload;
       })
       .addCase(authSignUp.fulfilled, (state) => {
-        state.signingUp = false;
+        state.signingUp = true;
         state.error = null;
       })
       .addCase(authSignIn.pending, (state) => {
@@ -117,6 +126,6 @@ export const applicationSlice = createSlice({
   },
 });
 
-// export const { a } = applicationSlice.actions;
+export const { setSignUp } = applicationSlice.actions;
 
 export default applicationSlice.reducer;
