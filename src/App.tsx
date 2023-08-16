@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Profiler } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import Header from "./Components/Header";
 import SignUp from "./pages/SignUp";
