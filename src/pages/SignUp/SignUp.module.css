@@ -1,0 +1,22 @@
+.main {
+  text-align: center;
+  text-align: -webkit-center;
+  margin: 30px 0;
+}
+.inputDiv {
+  width: 400px;
+  display: flex;
+  justify-content: space-between;
+  margin: 10px 0;
+}
+.regButton {
+  margin-top: 10px;
+  border-radius: 10px;
+  background-color: transparent;
+  border: 1px solid black;
+}
+.errorMsg {
+  white-space: nowrap;
+  margin-left: 10px;
+  color: red;
+}
